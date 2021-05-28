@@ -17,21 +17,23 @@ int main(int argc, char **argv)
     selfAddr->sin_addr.s_addr = 0;
     sockaddr_in * remoteAddr = new (sockaddr_in);
     remoteAddr->sin_family = AF_INET;
-    remoteAddr->sin_port = htons(7); //port
+    remoteAddr->sin_port = htons(13); //port
     remoteAddr->sin_addr.s_addr = inet_addr("82.179.90.12"); //ip
     char *buf = new char [256];
-    strcpy(buf, "Hello World!!!\n");
+    strcpy(buf, "Can i have the date and time please?\n");
     int msgLen = strlen(buf);
-    int mySocket = socket(AF_INET,SOCK_STREAM, 0);  // udp
+    int mySocket = socket(AF_INET, SOCK_DGRAM, 0); //tcp
     if (mySocket == -1) {
         errHandler("Error open socket", 11);
     }
-    int rc = bind(mySocket, (const sockaddr*) selfAddr, sizeof(sockaddr_in));
+    int rc = bind(mySocket, (const sockaddr*) selfAddr, sizeof
+                  (sockaddr_in));
     if (rc == -1) {
         close(mySocket);
         errHandler("Error bind socket with local address", 12);
     }
-    rc = connect(mySocket, (const sockaddr*) remoteAddr,sizeof(sockaddr_in));
+    rc = connect(mySocket, (const sockaddr*) remoteAddr,
+                 sizeof(sockaddr_in));
     if (rc == -1) {
         close(mySocket);
         errHandler("Error connect socket with remote server", 13);
@@ -48,7 +50,7 @@ int main(int argc, char **argv)
         errHandler("Error recevie answer", 15);
     }
     buf[rc]= '\0';
-    std::cout<<"We receive: "<< buf <<std::endl;
+    std::cout<<"We receive: "<<buf << std::endl;
     close(mySocket);
     delete selfAddr;
     delete remoteAddr;
